@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>File Upload and Download</title>
+</head>
+
+<body>
+    <h1><b> Ml Model</b></h1>
+    <form action="/upload_and_download/" method="post" enctype="multipart/form-data">
+        
+        <form onsubmit="handleSubmit()" method="get" action="#">
+            <input type="file" id="configFileInput">
+    <button onclick="readConfigAndProcessXML()">Read Config and Process XML</button>
+    <script>
+        function readConfigAndProcessXML() {
+            var configFileInput = document.getElementById('configFileInput');
+            var configReader = new FileReader();
+
+            configReader.onload = function(event) {
+                var configContent = event.target.result;
+                var xmlFilePath = configContent.trim(); // Assuming the path is on a single line
+
+                fetch(xmlFilePath)
+                    .then(response => response.text())
+                    .then(xmlContent => {
+                        // Process the XML content
+                        console.log("XML Content:", xmlContent);
+                    })
+                    .catch(error => {
+                        console.error("Error reading XML file:", error);
+                    });
+            };
+
+            // Read the config file as text
+            var configFile = configFileInput.files[0];
+            configReader.readAsText(configFile);
+        }
+    </script>
+            <!-- <input type="file" id="configFileInput" accept=".txt">
+    <button onclick="readConfigAndProcessXML()">Read Config and Process XML</button>
+    <script>
+        function readConfigAndProcessXML() {
+            var configFileInput = document.getElementById('configFileInput');
+            var configReader = new FileReader();
+
+            configReader.onload = function(event) {
+                var configContent = event.target.result;
+                var xmlFilePath = configContent.trim(); 
+
+                fetch(xmlFilePath)
+                    .then(response => response.text())
+                    .then(xmlFileContent => {
+                        
+                        processXML(xmlFileContent);
+                    })
+                    .catch(error => {
+                        console.error("Error reading XML file:", error);
+                    });
+            };
+
+            
+            var configFile = configFileInput.files[0];
+            configReader.readAsText(configFile);
+        }
+
+        function processXML(xmlContent) {
+            
+            console.log("XML Content:", xmlContent);
+        }
+    </script> -->
+            <!-- <input type="file" id="configFileInput">
+            <button onclick="readConfigAndSelectXML()">Read Config and Select XML</button>
+            <input type="file" id="selectedXmlFileInput" style="display: none;">
+            <button onclick="processSelectedXML()">Process Selected XML</button>
+            <script>
+                let selectedXmlFilePath = null;
+        
+                function readConfigAndSelectXML() {
+                    var configFileInput = document.getElementById('configFileInput');
+                    var configReader = new FileReader();
+        
+                    configReader.onload = function(event) {
+                        var configContent = event.target.result;
+                        var xmlFilePath = configContent.trim(); // Assuming the path is on a single line
+                        
+                        selectedXmlFilePath = xmlFilePath;
+        
+                        // Show the input field to allow selecting the XML file
+                        document.getElementById('selectedXmlFileInput').style.display = 'block';
+                    };
+                    
+                    // Read the config file as text
+                    var configFile = configFileInput.files[0];
+                    configReader.readAsText(configFile);
+                }
+        
+                function processSelectedXML() {
+                    if (selectedXmlFilePath) {
+                        var selectedXmlFileInput = document.getElementById('selectedXmlFileInput');
+                        var selectedXmlFile = selectedXmlFileInput.files[0];
+        
+                        if (selectedXmlFile) {
+                            // You can use the selectedXmlFilePath and selectedXmlFile for further processing
+                            console.log("Selected XML File Path:", selectedXmlFilePath);
+                            console.log("Selected XML File:", selectedXmlFile);
+                            // Perform your processing logic here
+                        } else {
+                            console.error("No XML file selected.");
+                        }
+                    } else {
+                        console.error("No XML file path from the config.");
+                    }
+                }
+            </script> -->
+            
+            <!-- <label class="mainHeading">Config File</label>
+         <input type="file" id="configFileInput">
+          <input type="file" id="xmlFileInput"> -->
+         <!-- <button onclick="readConfigAndXML()">Read XML</button>
+         <script>
+         function loadXMLDoc(dname) {
+            if (window.XMLHttpRequest) {
+              xhttp = new XMLHttpRequest();
+            } else {
+              xhttp = new ActiveXObject("Microsoft.XMLHTTP");
+            }
+            xhttp.open("GET", dname, false);
+            xhttp.send();
+            return xhttp.responseXML;
+          }
+          
+          var xmlDoc = loadXMLDoc("config.xml");
+        </script>
+           --> 
+         <!-- <script>
+             function readConfigAndXML() {
+                 var configFileInput = document.getElementById('configFileInput');
+                 var xmlFileInput = document.getElementById('xmlFileInput');
+                 
+                 var configReader = new FileReader();
+                 var xmlReader = new FileReader();
+     
+                 configReader.onload = function(event) {
+                     var configContent = event.target.result;
+                     var xmlFilePath = configContent.trim(); // Assuming the path is on a single line
+                     
+                     xmlReader.onload = function(event) {
+                         var xmlContent = event.target.result;
+                         
+                         // Use the xmlContent for your desired purpose
+                         console.log("XML content:", xmlContent);
+                     };
+                     
+                     // Read the XML file as text
+                     var xmlFile = xmlFileInput.files[0];
+                     xmlReader.readAsText(xmlFile);
+                 };
+                 
+                 // Read the config file as text
+                 var configFile = configFileInput.files[0];
+                 configReader.readAsText(configFile);
+             } -->
+         <!-- </script> -->
+<!--          
+    <button onclick="readXMLFromConfig()">Read XML</button>
+    <script>
+        function readXMLFromConfig() {
+            var configFileInput = document.getElementById('configFileInput');
+            var configReader = new FileReader();
+
+            configReader.onload = function(event) {
+                var configContent = event.target.result;
+                var xmlFilePath = configContent.trim(); // Assuming the path is on a single line
+                
+                // Now use the xmlFilePath to fetch and read the content of the XML file
+                fetch(xmlFilePath)
+                    .then(response => response.text())
+                    .then(xmlContent => {
+                        // Do something with the xmlContent, such as processing or displaying
+                        console.log(xmlContent);
+                    })
+                    .catch(error => {
+                        console.error("Error reading XML file:", error);
+                    });
+            };
+            
+            // Read the config file as text
+            var configFile = configFileInput.files[0];
+            configReader.readAsText(configFile);
+        }
+    </script> -->
+    <!-- <button onclick="readConfigFile()">Read Config</button>
+    <pre id="output"></pre>
+    <script>
+        function readConfigFile() {
+            var fileInput = document.getElementById('configFileInput');
+            var output = document.getElementById('output');
+            
+            var file = fileInput.files[0]; // Get the selected file
+            
+            if (file) {
+                var reader = new FileReader();
+                reader.onload = function(event) {
+                    var configFileContent = event.target.result;
+                    output.textContent = configFileContent;
+                };
+                reader.readAsText(file); // Read the file as text
+            } else {
+                output.textContent = "No file selected.";
+            }
+        }
+    </script> -->
+        <form onsubmit="handleSubmit()" method="get" action="#">
+            <!-- <label class="mainHeading">directory</label>
+            <input type="file" id="directoryInput" webkitdirectory directory multiple>
+    <p>Selected directory path: <span id="selectedPath"></span></p> -->
+    <label class="mainHeading">romAI Model</label>
+    <input type="file" id="fileInput" webkitdirectory directory>
+    <div id="fileContent"></div>
+
+    <script>
+        const fileInput = document.getElementById('fileInput');
+        const fileContent = document.getElementById('fileContent');
+
+        fileInput.addEventListener('change', (event) => {
+            const files = event.target.files;
+            if (files.length > 0) {
+                const selectedFile = files[0];
+                readFileContent(selectedFile);
+            }
+        });
+
+        function readFileContent(file) {
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                const content = event.target.result;
+                fileContent.textContent = content;
+            };
+            reader.readAsText(file);
+        }
+    </script>
+    
+        <h2>Design Variables</h2>
+
+        <div class="container">
+            <h3 class="heading">Phi</h3>
+            <div class="subContainer">
+                <input type="text" id="minPhiInput" placeholder="min" />
+                <input type="range" id="minPhiRange" />
+            </div>
+            <div class="subContainer">
+                <input type="text" id="maxPhiInput" placeholder="max" />
+                <input type="range" id="maxPhiRange" />
+            </div>
+        </div>
+
+        <div class="container">
+            <h3 class="heading">Omega</h3>
+            <div class="subContainer">
+                <input type="text" id="minOmgInput" placeholder="min" />
+                <input type="range" id="minOmgRange" />
+            </div>
+            <div class="subContainer">
+                <input type="text" id="maxOmgInput" placeholder="max" />
+                <input type="range" id="maxOmgRange" />
+            </div>
+        </div>
+
+        <div class="container">
+            <h3 class="heading">Mass</h3>
+            <div class="subContainer">
+                <input type="text" id="minMassInput" placeholder="min" />
+                <input type="range" id="minMassRange" />
+            </div>
+            <div class="subContainer">
+                <input type="text" id="maxMassInput" placeholder="max" />
+                <input type="range" id="maxMassRange" />
+            </div>
+        </div>
+
+        <h2>Objective</h2>
+        <label class="heading">SI <= </label>
+                <input type="text" id="SiValue" placeholder="0.1" /><br /><br />
+
+                <button>Run Optimization and Download Data</button>
+                <script>
+                    var minPhi = document.getElementById("minPhiInput");
+                    var minPhiRange = document.getElementById("minPhiRange");
+                    minPhiRange.oninput = function () {
+                        minPhi.value = this.value;
+                    };
+                    minPhi.oninput = function () {
+                        minPhiRange.value = this.value;
+                    };
+
+                    var maxPhi = document.getElementById("maxPhiInput");
+                    var maxPhiRange = document.getElementById("maxPhiRange");
+                    maxPhiRange.oninput = function () {
+                        maxPhi.value = this.value;
+                    };
+                    maxPhi.oninput = function () {
+                        maxPhiRange.value = this.value;
+                    };
+
+                    var minOmg = document.getElementById("minOmgInput");
+                    var minOmgRange = document.getElementById("minOmgRange");
+                    minOmgRange.oninput = function () {
+                        minOmg.value = this.value;
+                    };
+                    minOmg.oninput = function () {
+                        minOmgRange.value = this.value;
+                    };
+
+                    var maxOmg = document.getElementById("maxOmgInput");
+                    var maxOmgRange = document.getElementById("maxOmgRange");
+                    maxOmgRange.oninput = function () {
+                        maxOmg.value = this.value;
+                    };
+                    maxOmg.oninput = function () {
+                        maxOmgRange.value = this.value;
+                    };
+
+                    var minMass = document.getElementById("minMassInput");
+                    var minMassRange = document.getElementById("minMassRange");
+                    minMassRange.oninput = function () {
+                        minMass.value = this.value;
+                    };
+                    minMass.oninput = function () {
+                        minMassRange.value = this.value;
+                    };
+
+                    var maxMass = document.getElementById("maxMassInput");
+                    var maxMassRange = document.getElementById("maxMassRange");
+                    maxMassRange.oninput = function () {
+                        maxMass.value = this.value;
+                    };
+                    maxMass.oninput = function () {
+                        maxMassRange.value = this.value;
+                    };
+
+                    function processXML(obj) {
+                        const fileInput = document.getElementById("xmlFileInput");
+                        const file = fileInput.files[0];
+
+                        if (!file) {
+                            alert("Please select an XML file.");
+                            return;
+                        }
+
+                        const reader = new FileReader();
+
+                        reader.onload = function (event) {
+                            const xmlString = event.target.result;
+                            const parser = new DOMParser();
+                            const xmlDoc = parser.parseFromString(xmlString, "text/xml");
+
+                            // Find and replace '0' with '50' for the DesignVariable with varname="phi"
+                            const phiNode = xmlDoc.querySelectorAll('DesignVariable[varname="phi"]');
+                            phiNode && phiNode.forEach(phiElement => {
+                                const lowerBoundNode = phiElement.querySelector("LowerBound");
+                                const upperBoundNode = phiElement.querySelector("UpperBound");
+                                if (lowerBoundNode) {
+                                    lowerBoundNode.textContent = obj.Phi.min;
+                                }
+                                if (upperBoundNode) {
+                                    upperBoundNode.textContent = obj.Phi.max;
+                                }
+                            })
+                            // if (phiNode) {
+                            //   const lowerBoundNode = phiNode.querySelector("LowerBound");
+                            //   const upperBoundNode = phiNode.querySelector("UpperBound");
+                            //   if (lowerBoundNode) {
+                            //     lowerBoundNode.textContent = obj.Phi.min;
+                            //   }
+                            //   if (upperBoundNode) {
+                            //     upperBoundNode.textContent = obj.Phi.max;
+                            //   }
+                            // }
+
+                            const omegaNode = xmlDoc.querySelector('DesignVariable[varname="w"]');
+                            if (omegaNode) {
+                                const lowerBoundNode = omegaNode.querySelector("LowerBound");
+                                const upperBoundNode = omegaNode.querySelector("UpperBound");
+                                if (lowerBoundNode) {
+                                    lowerBoundNode.textContent = obj.Omega.min;
+                                }
+                                if (upperBoundNode) {
+                                    upperBoundNode.textContent = obj.Omega.max;
+                                }
+                            }
+
+                            const massNode = xmlDoc.querySelector('DesignVariable[varname="Mass"]');
+                            if (massNode) {
+                                const lowerBoundNode = massNode.querySelector("LowerBound");
+                                const upperBoundNode = massNode.querySelector("UpperBound");
+                                if (lowerBoundNode) {
+                                    lowerBoundNode.textContent = obj.Mass.min;
+                                }
+                                if (upperBoundNode) {
+                                    upperBoundNode.textContent = obj.Mass.max;
+                                }
+                            }
+
+                            // Create and download the XML file
+                            const serializer = new XMLSerializer();
+                            const modifiedXmlString = serializer.serializeToString(xmlDoc);
+                            const blob = new Blob([modifiedXmlString], { type: "text/xml" });
+                            const url = URL.createObjectURL(blob);
+                            const a = document.createElement("a");
+                            a.href = url;
+                            a.download = "modifiedfile.xml";
+                            document.body.appendChild(a);
+                            a.click();
+                            document.body.removeChild(a);
+                            URL.revokeObjectURL(url);
+
+                            // After downloading, initiate the upload
+                            const formData = new FormData();
+                            formData.append("xmlFile", blob, "modifiedfile.xml");
+                            const uploadResponse = fetch("/upload_and_download/", {
+                                method: "POST",
+                                body: formData,
+                            });
+
+                            if (uploadResponse.ok) {
+                                const data = uploadResponse.json();
+                                window.location.href = data.download_url;
+                            } else {
+                                console.error("Upload failed");
+                            }
+                        };
+
+                        reader.readAsText(file);
+                        return file;
+                    }
+
+                    document.querySelector("form").addEventListener("submit", async (event) => {
+                        event.preventDefault();
+                        var minPhi = document.getElementById("minPhiInput");
+                        var minPhiRange = document.getElementById("minPhiRange");
+                        minPhiRange.oninput = function () {
+                            minPhi.value = this.value;
+                        };
+                        minPhi.oninput = function () {
+                            minPhiRange.value = this.value;
+                        };
+
+                        var maxPhi = document.getElementById("maxPhiInput");
+                        var maxPhiRange = document.getElementById("maxPhiRange");
+                        maxPhiRange.oninput = function () {
+                            maxPhi.value = this.value;
+                        };
+                        maxPhi.oninput = function () {
+                            maxPhiRange.value = this.value;
+                        };
+
+                        var minOmg = document.getElementById("minOmgInput");
+                        var minOmgRange = document.getElementById("minOmgRange");
+                        minOmgRange.oninput = function () {
+                            minOmg.value = this.value;
+                        };
+                        minOmg.oninput = function () {
+                            minOmgRange.value = this.value;
+                        };
+
+                        var maxOmg = document.getElementById("maxOmgInput");
+                        var maxOmgRange = document.getElementById("maxOmgRange");
+                        maxOmgRange.oninput = function () {
+                            maxOmg.value = this.value;
+                        };
+                        maxOmg.oninput = function () {
+                            maxOmgRange.value = this.value;
+                        };
+                        const obj = {
+                            Phi: {
+                                min: 0,
+                                max: 0,
+                            },
+                            Omega: {
+                                min: 0,
+                                max: 0,
+                            },
+                            Mass: {
+                                min: 0,
+                                max: 0,
+                            },
+                        };
+                        //   obj['fileLocation'] = document.getElementById("fileUpload").value;
+                        if (minPhi.value) {
+                            obj.Phi["min"] = minPhi.value;
+                        }
+                        if (maxPhi.value) {
+                            obj.Phi["max"] = maxPhi.value;
+                        }
+                        if (minOmg.value) {
+                            obj.Omega["min"] = minOmg.value;
+                        }
+                        if (maxOmg.value) {
+                            obj.Omega["max"] = maxOmg.value;
+                        }
+                        if (minMass.value) {
+                            obj.Mass["min"] = minMass.value;
+                        }
+                        if (maxMass.value) {
+                            obj.Mass["max"] = maxMass.value;
+                        }
+                        obj["SI"] = document.getElementById("SiValue").value;
+                        const temp = processXML(obj);
+
+
+                        // const formData = new FormData(event.target);
+                        const response = await fetch("/rewrite_file/", {
+                            method: "POST",
+                            body: formData,
+                        });
+
+                        if (response.ok) {
+                            const data = await response.json();
+                            window.location.href = data.download_url;
+                        } else {
+                            console.error("Upload failed");
+                        }
+                    });
+                    
+
+                </script>
+                <div class="container">
+                    <h3 class="heading">Phi</h3>
+                    <div class="subContainer">
+                        <input type="text" id="minPhiInput" placeholder="min" value ="20" readonly />
+                        <input type="range" id="minPhiRange" />
+                    </div>
+                    <div class="subContainer">
+                        <input type="text" id="maxPhiInput" placeholder="max" value ="20" readonly  />
+                        <input type="range" id="maxPhiRange" />
+                    </div>
+                </div>
+        
+                <div class="container">
+                    <h3 class="heading">Omega</h3>
+                    <div class="subContainer">
+                        <input type="text" id="minOmgInput" placeholder="min" value ="20" readonly  />
+                        <input type="range" id="minOmgRange" />
+                    </div>
+                    <div class="subContainer">
+                        <input type="text" id="maxOmgInput" placeholder="max" value ="20" readonly  />
+                        <input type="range" id="maxOmgRange" />
+                    </div>
+                </div>
+        
+                <div class="container">
+                    <h3 class="heading">Mass</h3>
+                    <div class="subContainer">
+                        <input type="text" id="minMassInput" placeholder="min" value ="20" readonly  />
+                        <input type="range" id="minMassRange" />
+                    </div>
+                    <div class="subContainer">
+                        <input type="text" id="maxMassInput" placeholder="max" value ="20" readonly />
+                        <input type="range" id="maxMassRange" />
+                    </div>
+
+    </form>
+</body>
+
+</html>

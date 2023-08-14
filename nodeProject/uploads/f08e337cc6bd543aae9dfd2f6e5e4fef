@@ -1,0 +1,107 @@
+<div class="nodePropertyItem">
+    <div class="nodePropertyTitle nodeIdTitle">{{::'admin.dataplugins.googleCloud.UiBucket' | translate }}</div>
+    <input ng-model="getSetWrapper.bucket">
+</div>
+
+<div class="nodePropertyItem">
+    <div class="nodePropertyTitle nodeIdTitle">{{::'admin.dataplugins.googleCloud.UiAccessKey' | translate }}</div>
+    <input ng-model="getSetWrapper.accessKey">
+</div>
+<div class="nodePropertyItem">
+    <div class="nodePropertyTitle nodeIdTitle">{{::'admin.dataplugins.googleCloud.UiSecretKey' | translate }}</div>
+    <input type="password" ng-model="getSetWrapper.secretKey">
+</div>
+
+<div ng-if="!pluginSettings.showFetchSheets()">
+    <div class="nodePropertyItem">
+        <div class="nodePropertyTitle nodeIdTitle">
+            {{::'admin.dataplugins.googleCloud.UiFilepath' | translate }}
+        </div>
+        <input ng-model="getSetWrapper.path">
+        <button ng-click="testConnection()"
+            ng-disabled="waitingForServerResponse"
+            class="unity-button unity-button--small unity-button--primary">
+            <i class="unity_loading_spinner unity-spin unity-button__icon"
+                ng-if="waitingForServerResponse"></i>
+            <span class="unity-button__label">
+                {{::'admin.dataplugins.googleCloud.testConnection' | translate }}
+            </span>
+        </button>
+        <div ng-if="isError !== undefined && isError !== null">
+            <span ng-class="!isError ? 
+                'fa fa-check-circle success' : 'fa fa-times-circle failure'">
+            </span>
+            <span title={{toolTip}}>{{ connectionStatus }}</span>
+        </div>
+    </div>
+</div>
+
+<div ng-show="pluginSettings.showFetchSheets()">
+    <div class="nodePropertyItem">
+        <dw-data-file-input
+            label="{{ pluginSettings.filePathLabel }}"
+            path="pluginSettings.fileSettings.FilePath"
+            is-load-type-upload-file="pluginSettings.fileSettings.isLoadTypeUploadFile"
+            allowbrowse="false"
+            on-upload="fetchExcelRangeOnUpload()"
+            on-reset="clearExcelRange()"
+            accept="{{pluginSettings.fileAcceptFilter}}">
+        </dw-data-file-input>
+        <button ng-click="testConnection()"
+            ng-disabled="waitingForServerResponse"
+            class="unity-button unity-button--small unity-button--primary">
+            <i class="unity_loading_spinner unity-spin unity-button__icon"
+                ng-if="waitingForServerResponse"></i>
+            <span class="unity-button__label">
+                {{::'admin.dataplugins.googleCloud.testConnection' | translate }}
+            </span>
+        </button>
+        <div ng-if="isError !== undefined && isError !== null">
+            <span ng-class="!isError ? 
+                'fa fa-check-circle success' : 'fa fa-times-circle failure'">
+            </span>
+            <span title={{toolTip}}>{{ connectionStatus }}</span>
+        </div>
+    </div>
+    <div class="nodePropertyItem">
+        <div class="nodePropertyTitle nodeIdTitle">
+            {{::'admin.dataplugins.excel.sheet' | translate }}
+        </div>
+        <select ng-model="getSetWrapper.sheet" id="excelRange"
+            ng-options="range.Name as range.Title for range in 
+            pluginSettings.getExcelRange()">
+        </select>
+        <i ng-if="pluginSettings.fileSettings.isLoadTypeUploadFile"
+            ng-class="waitingForServerResponse ? 
+            'unity_loading_spinner unity-spin unity-button__icon' : ''"></i>
+        <button ng-if="!pluginSettings.fileSettings.isLoadTypeUploadFile"
+            ng-click="fetchExcelRange()" 
+            ng-disabled="!pluginSettings.isValidFileExtension()"
+            class="unity-button unity-button--small unity-button--primary" 
+            style="margin-left:5px;">
+            <i ng-class="waitingForServerResponse ? 
+                'unity_loading_spinner unity-spin unity-button__icon' : ''"></i>
+            {{::'admin.dataplugins.excel.fetchsheets' | translate }}
+        </button>
+    </div>
+</div>
+
+<div class="nodePropertyItem">
+    <div class="nodePropertyTitle nodeIdTitle">{{::'admin.dataplugins.weburl.datatype' | translate }}</div>
+    <select ng-model="getSetWrapper.messageType"
+        ng-options="type.name as type.title for type in pluginSettings.parserSettingsApiViewModel.messageTypes">
+    </select>
+</div>
+
+<div class="nodePropertyItem" ng-if="pluginSettings.showRecordPath()">
+    <div class="nodePropertyTitle nodeIdTitle">{{::'admin.dataplugins.xml.recordXPath' | translate }}</div>
+    <input ng-model="getSetWrapper.recordsPath">
+    <span class="info"
+        style="margin-left:5px;">{{::'admin.dataplugins.xml.recordXPathInfoMsg' | translate }}</span>
+</div>
+
+<dw-authoring-parser-settings 
+    parser-settings-api-view-model="pluginSettings.parserSettingsApiViewModel"
+    generate-columns-error="pluginSettings.getSettingsError()"
+    hide-filter-column="pluginSettings.hideFilterColumn">
+</dw-authoring-parser-settings>

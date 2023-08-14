@@ -1,0 +1,82 @@
+"use strict";
+
+import {ParserSettingsAuthoringApi} from 'common/dataPlugins/common/api/component/parserSettingsAuthoringApi';
+import {TextConnectionSettingsAuthroingApi} from 'common/dataPlugins/common/api/component/textConnectionSettingsAuthoringApi';
+
+function AzureSettingsAuthoringApi(bag) {
+    this._bag = bag;
+    this._pluginId = 'AzureBlobPlugin';
+
+    this.parserSettingsAuthoringApi = new 
+        ParserSettingsAuthoringApi(bag, 'Json');
+    this.textConnectionSettingsAuthroingApi = new 
+        TextConnectionSettingsAuthroingApi(bag);
+}
+
+AzureSettingsAuthoringApi.prototype.getPluginId = function getPluginId() {
+    return this._pluginId;
+};
+
+AzureSettingsAuthoringApi.prototype.getAccessKey = function getAccessKey() {
+    return this._bag.get('Identity', '');
+};
+
+AzureSettingsAuthoringApi.prototype.setAccessKey = function 
+        setAccessKey(value) {
+    this._bag.set('Identity', value);
+};
+
+AzureSettingsAuthoringApi.prototype.getSecretKey = function getSecretKey() {
+    return this._bag.get('Credential', '');
+};
+
+AzureSettingsAuthoringApi.prototype.setSecretKey = function 
+        setSecretKey(value) {
+    this._bag.set('Credential', value);
+};
+
+AzureSettingsAuthoringApi.prototype.getBucket = function getBucket() {
+    return this._bag.get('Container', '');
+};
+
+AzureSettingsAuthoringApi.prototype.setBucket = function setBucket(value) {
+    this._bag.set('Container', value);
+};
+
+AzureSettingsAuthoringApi.prototype.getPath = function getPath() {
+    return this._bag.get('FilePath', '');
+};
+
+AzureSettingsAuthoringApi.prototype.setPath = function setPath(value) {
+    return this._bag.set('FilePath', value);
+};
+
+AzureSettingsAuthoringApi.prototype.getMessageType = function 
+        getMessageType(value) {
+    return this._bag.get('ParserPluginId', 'Json');
+};
+
+AzureSettingsAuthoringApi.prototype.setMessageType = function 
+        setMessageType(value) {
+    this.parserSettingsAuthoringApi.setParserPluginId(value);
+};
+
+AzureSettingsAuthoringApi.prototype.getSkipRows = function getSkipRows() {
+    return this._bag.get('SkipRows', '0');
+};
+
+AzureSettingsAuthoringApi.prototype.setSkipRows = function setSkipRows(value) {
+    return this._bag.set('SkipRows', value);
+};
+
+AzureSettingsAuthoringApi.prototype.getDataDiscoveryRowCount = function 
+        getDataDiscoveryRowCount() {
+    return this._bag.get('DataDiscoveryRowCount', 10);
+};
+
+AzureSettingsAuthoringApi.prototype.setDataDiscoveryRowCount = function 
+        setDataDiscoveryRowCount(value) {
+    return this._bag.set('DataDiscoveryRowCount', value);
+};
+
+export {AzureSettingsAuthoringApi};

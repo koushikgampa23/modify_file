@@ -1,0 +1,259 @@
+"use strict";
+
+import {dataPluginDirectives} from 'common/dataPlugins/dataPluginDirectives';
+import {ParserSettingsApiViewModel} from 'common/dataPlugins/common/api/component/dwAuthoringParserSettings';
+import {TextConnectionSettingsApiViewModel} from 'common/dataPlugins/common/api/component/dwAuthoringTextConnectionSettings';
+import translate from 'common/localization/translate';
+import {dataPluginRestClient} from 'common/rest/dataPluginRestClient';
+
+dataPluginDirectives.directive('dwAzureInputDatasource', function (ngDialog) {
+    return {
+        scope: {
+            pluginSettings: '=',
+            parameterProvider:'=',
+            parameterFolder:'='
+        },
+        restrict: 'E',
+        templateUrl: 'dataPlugins/azure/dwAzureInputDatasource.tpl.html',
+        link: function (scope, elm, attrs) {
+            var apiViewModel = scope.pluginSettings;
+            var getSetWrapper = {};
+ 
+            Object.defineProperty(getSetWrapper, 'path', {
+                get() {
+                    return apiViewModel.getPath();
+                },
+                set(value) {
+                    apiViewModel.setPath(value);
+                }
+            });
+
+            Object.defineProperty(getSetWrapper, 'bucket', {
+                get() {
+                    return apiViewModel.getBucket();
+                },
+                set(value) {
+                    apiViewModel.setBucket(value);
+                }
+            });
+
+            Object.defineProperty(getSetWrapper, 'accessKey', {
+                get() {
+                    return apiViewModel.getAccessKey();
+                },
+                set(value) {
+                    apiViewModel.setAccessKey(value);
+                }
+            });
+
+            Object.defineProperty(getSetWrapper, 'secretKey', {
+                get() {
+                    return apiViewModel.getSecretKey();
+                },
+                set(value) {
+                    apiViewModel.setSecretKey(value);
+                }
+            });
+
+            Object.defineProperty(getSetWrapper, 'messageType', {
+                get() {
+                    return apiViewModel.getMessageType();
+                },
+                set(value) {
+                    apiViewModel.setMessageType(value);
+                }
+            });
+
+            Object.defineProperty(getSetWrapper, 'recordsPath', {
+                get() {
+                    return apiViewModel.getRecordsXpath();
+                },
+                set(value) {
+                    apiViewModel.setRecordsXpath(value);
+                }
+            });
+
+            Object.defineProperty(getSetWrapper, 'skipRows', {
+                get() {
+                    return apiViewModel.getSkipRows();
+                },
+                set(value) {
+                    apiViewModel.setSkipRows(value);
+                }
+            });
+
+            Object.defineProperty(getSetWrapper, 'dataDiscoveryRowCount', {
+                get() {
+                    return apiViewModel.getDataDiscoveryRowCount();
+                },
+                set(value) {
+                    apiViewModel.setDataDiscoveryRowCount(value);
+                }
+            });
+
+            scope.waitingForServerResponse = false;
+
+            scope.getSetWrapper = getSetWrapper;
+
+            scope.testConnection = function testConnection() { 
+                scope.waitingForServerResponse = true;
+                dataPluginRestClient.getData('Test', 
+                    apiViewModel.getPluginId(), 
+                    apiViewModel.getPluginSettings())
+                .then(function(response) {
+                    scope.$apply(function(){
+                        if(!response.data.Data){
+                            scope.waitingForServerResponse = false;
+                            return;
+                        }
+                        scope.isError = false;
+                        scope.connectionStatus=
+                            translate('admin.dataplugins.azure.connectionSuccessful');
+                        scope.waitingForServerResponse = false;
+                    });
+                }, function(response) {
+                    scope.$apply(function() {
+                        scope.isError = true;
+                        if(response.data.ErrorMessage){
+                            ngDialog.open({
+                                template:
+                                    'dataPlugins/common/components/dataPluginError.tpl.html',
+                                showClose: true,
+                                controller: ['$scope', function ($scope) {
+                                    $scope.title= 
+                                    translate('admin.dataplugins.azure.textConnectionError');
+                                    $scope.description = response.data.ErrorMessage;
+                                }]
+                            });
+                        }
+                        scope.waitingForServerResponse = false;
+                        scope.connectionStatus=translate('admin.dataplugins.azure.connectionFailed');
+                    });
+                });
+            };
+        }
+    };
+});
+
+function AzureSettingsApiViewModel
+        (webUrlAuthoringApi, dataPluginViewModel, parametersApiViewModel) {
+    this._api = webUrlAuthoringApi;
+    this._dataPluginViewModel = dataPluginViewModel;
+
+    this.messageTypes = ['Json', 'Text', 'Xml','FAST_EXCEL'];
+    this.host = this._dataPluginViewModel.getPluginHost();
+    
+    this.parserSettingsApiViewModel = new ParserSettingsApiViewModel(
+        this._api.parserSettingsAuthoringApi, this._api, parametersApiViewModel, 
+        this.messageTypes);
+    this.parserSettingsApiViewModel.setShowDecimalSeparator(true);
+    this.parserSettingsApiViewModel.setShowParserSelector(false);
+    this.parserSettingsApiViewModel.setShowColumnFilter(false);
+
+    this.textConnectionSettingsApiViewModel = new 
+        TextConnectionSettingsApiViewModel(
+            this._api.textConnectionSettingsAuthroingApi);
+}
+
+AzureSettingsApiViewModel.prototype.getPluginSettings = function 
+        getPluginSettings() {
+    return this._api._bag.store();
+};
+
+AzureSettingsApiViewModel.prototype.getPluginId = function 
+        getPluginId() {
+    return this._api.getPluginId();
+};
+
+AzureSettingsApiViewModel.prototype.getPath = function getPath() {
+    return this._api.getPath();
+};
+
+AzureSettingsApiViewModel.prototype.setPath = function setPath(value) {
+    this._api.setPath(value);
+};
+
+AzureSettingsApiViewModel.prototype.getAccessKey = function getAccessKey() {
+    return this._api.getAccessKey();
+};
+
+AzureSettingsApiViewModel.prototype.setAccessKey = function 
+        setAccessKey(value) {
+    this._api.setAccessKey(value);
+};
+
+AzureSettingsApiViewModel.prototype.getBucket = function getBucket() {
+    return this._api.getBucket();
+};
+
+AzureSettingsApiViewModel.prototype.setBucket = function setBucket(value) {
+    this._api.setBucket(value);
+};
+
+AzureSettingsApiViewModel.prototype.getSecretKey = function getSecretKey() {
+    return this._api.getSecretKey();
+};
+
+AzureSettingsApiViewModel.prototype.setSecretKey = function 
+        setSecretKey(value) {
+    this._api.setSecretKey(value);
+};
+
+AzureSettingsApiViewModel.prototype.getRecordsXpath = function
+        getRecordsXpath() {
+    return this.parserSettingsApiViewModel.
+        getParserApiViewModel().getRecordsXpath();
+};
+
+AzureSettingsApiViewModel.prototype.setRecordsXpath = function 
+        setRecordsXpath(value) {
+    return this.parserSettingsApiViewModel.
+        getParserApiViewModel().setRecordsXpath(value);
+};
+
+AzureSettingsApiViewModel.prototype.getMessageType = function getMessageType() {
+    return this._api.getMessageType();
+};
+
+AzureSettingsApiViewModel.prototype.setMessageType = function 
+        setMessageType(value) {
+    this._api.setMessageType(value);
+};
+
+AzureSettingsApiViewModel.prototype.showRecordPath = function showRecordPath() {
+    return this._api.parserSettingsAuthoringApi.getParserPluginId() === 'Xml';
+};
+
+AzureSettingsApiViewModel.prototype.getDataDiscoveryRowCount = function 
+        getDataDiscoveryRowCount() {
+    return this.textConnectionSettingsApiViewModel.getDataDiscoveryRowCount();
+};
+
+AzureSettingsApiViewModel.prototype.setDataDiscoveryRowCount = function 
+        setDataDiscoveryRowCount(value) {
+    this.textConnectionSettingsApiViewModel.setDataDiscoveryRowCount(value);
+};
+
+AzureSettingsApiViewModel.prototype.getSkipRows = function getSkipRows() {
+    return this.textConnectionSettingsApiViewModel.getSkipRows();
+};
+
+AzureSettingsApiViewModel.prototype.setSkipRows = function setSkipRows(value) {
+    this.textConnectionSettingsApiViewModel.setSkipRows(value);
+};
+
+AzureSettingsApiViewModel.prototype.showTextRows = function showTextRows() {
+    return this._api.parserSettingsAuthoringApi.getParserPluginId() === 'Text';
+};
+
+AzureSettingsApiViewModel.prototype.getConnectionSettings = function 
+        getConnectionSettings() {
+    return this._connectionSettings;
+};
+
+AzureSettingsApiViewModel.prototype.getConnectionSettingsError = function 
+        getConnectionSettingsError() {
+    return this.parserSettingsApiViewModel.getSettingsError();
+};
+
+export {AzureSettingsApiViewModel};
